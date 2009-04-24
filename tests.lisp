@@ -1,153 +1,168 @@
 
 (defpackage :cipht/games/geometry-2d-tests
-  (:use #:cl #:rt))
+  (:use #:cl #:fiveam))
 
 (in-package :cipht/games/geometry-2d-tests)
 
+(def-suite geometry-2d)
+(in-suite geometry-2d)
+
 ;;;; CONSTANTS
 
-(deftest constants.0
-    (<= (* 2 3.14159) (- geom:+2pi+ short-float-epsilon) (+ geom:+2pi+ short-float-epsilon) (* 2 3.1416))
-  t)
+(test constants.0
+  (is (<= (* 2 3.14159) (- geom:+2pi+ short-float-epsilon) (+ geom:+2pi+ short-float-epsilon) (* 2 3.1416))))
 
 ;;;; MATH
 
-(deftest sinkf.0
-    (let ((x 2))
-      (geom:sinkf x 1.1)
-      (geom:sinkf x -1.1)
-      x)
-  0)
+(test sinkf.0
+  (for-all ((x (gen-integer))
+	    (m (gen-integer) (> (abs m) (abs x))))
+    (geom:sinkf x m)
+    (is (= 0 x))))
 
-(deftest sinkf.1
-    (let ((x 3))
-      (geom:sinkf x -1)
-      (geom:sinkf x 1)
-      x)
-  1)
+(test sinkf.1
+  (for-all ((x (gen-integer))
+	    (m (gen-integer :max 0) (< (abs m) (abs x))))
+    (let ((y x))
+      (geom:sinkf y m)
+      (is (< (abs y) (abs x))))))
 
-(deftest sinkf.2
-    (let ((x 3))
-      (geom:sinkf x 2)
-      x)
-  1)
+(test sinkf.2
+  (is (= 1 (let ((x 3))
+	     (geom:sinkf x 2)
+	     x))))
 
 ;;;; POINTS
 
-(deftest point.0
-    (let ((p (geom:point 100 200)))
-      (values (geom:x-of p) (geom:y-of p)))
-  100 200)
+(test point.0
+  (let ((p (geom:point 100 200)))
+    (is (= 100 (geom:x-of p)))
+    (is (= 200 (geom:y-of p)))))
 
-(deftest point.1
-    (handler-case
-	(geom:point nil 0)
-      (type-error () t))
-  t)
+(test point.1
+  (signals type-error (geom:point nil 0)))
 
-(deftest translate-point.0
-    (let ((p (geom:point 42 10))
-	  (q (geom:point 10 10)))
+(test translate-point.0
+  (for-all ((px (gen-integer)) (py (gen-integer))
+	    (qx (gen-integer)) (qy (gen-integer)))
+    (let ((p (geom:point px py))
+	  (q (geom:point qx qy)))
       (let ((r (geom:translate-point p q)))
-	(values (geom:x-of p) (geom:y-of p)
-		(geom:x-of q) (geom:y-of q)
-		(geom:x-of r) (geom:y-of r))))
-  42 10
-  10 10
-  52 20)
+	(is (= px (geom:x-of p)))
+	(is (= py (geom:y-of p)))
+	(is (= qx (geom:x-of q)))
+	(is (= qy (geom:y-of q)))
+	(is (= (+ px qx)) (geom:x-of r))
+	(is (= (+ py qy)) (geom:y-of r))))))
 
-(deftest translate-point!.0
-    (let ((p (geom:point 42 10))
-	  (q (geom:point 10 10)))
+(test translate-point!.0
+  (for-all ((px (gen-integer)) (py (gen-integer))
+	    (qx (gen-integer)) (qy (gen-integer)))
+    (let ((p (geom:point px py))
+	  (q (geom:point qx qy)))
       (let ((r (geom:translate-point! p q)))
-	(values (geom:x-of p) (geom:y-of p)
-		(geom:x-of q) (geom:y-of q)
-		(geom:x-of r) (geom:y-of r)
-		(eq p r))))
-  52 20
-  10 10
-  52 20
-  t)
+	(is (= qx (geom:x-of q)))
+	(is (= qy (geom:y-of q)))
+	(is (= (+ px qx)) (geom:x-of r))
+	(is (= (+ py qy)) (geom:y-of r))
+	(is (eq p r))))))
 
-(deftest translate-point*.0
-    (let ((p (geom:point 42 10)))
-      (let ((r (geom:translate-point* p :x 10 :y 10)))
-	(values (geom:x-of p) (geom:y-of p)
-		(geom:x-of r) (geom:y-of r))))
-  52 20
-  52 20)
+(test translate-point*.0
+  (for-all ((px (gen-integer)) (py (gen-integer))
+	    (qx (gen-integer)) (qy (gen-integer)))
+    (let ((p (geom:point px py)))
+      (let ((r (geom:translate-point* p :x qx :y qy)))
+	(is (= (+ px qx)) (geom:x-of r))
+	(is (= (+ py qy)) (geom:y-of r))
+	(is (eq p r))))))
 
-(deftest point<-point.0
-    (let ((p (geom:point 42 10))
-	  (q (geom:point 10 20)))
+(test point<-point.0
+  (for-all ((px (gen-integer)) (py (gen-integer))
+	    (qx (gen-integer)) (qy (gen-integer)))
+    (let ((p (geom:point px py))
+	  (q (geom:point qx qy)))
       (let ((r (geom:point<-point! p q)))
-	(values (geom:x-of p) (geom:y-of p)
-		(geom:x-of q) (geom:y-of q)
-		(geom:x-of r) (geom:y-of r)
-		(eq p r) (eq p q))))
-  10 20
-  10 20
-  10 20
-  t nil)
+	(is (= qx (geom:x-of p)))
+	(is (= qy (geom:y-of p)))
+	(is (= qx (geom:x-of q)))
+	(is (= qy (geom:y-of q)))
+	(is (= qx (geom:x-of r)))
+	(is (= qy (geom:y-of r)))
+	(is (eq p r))
+	(is (eq p q))))))
 
-(deftest untranslate-point.0
-    (let ((p (geom:point 42 10))
-	  (q (geom:point 10 10)))
+(test untranslate-point.0
+  (for-all ((px (gen-integer)) (py (gen-integer))
+	    (qx (gen-integer)) (qy (gen-integer)))
+    (let ((p (geom:point px py))
+	  (q (geom:point qx qy)))
       (let ((r (geom:untranslate-point p q)))
-	(values (geom:x-of p) (geom:y-of p)
-		(geom:x-of q) (geom:y-of q)
-		(geom:x-of r) (geom:y-of r))))
-  42 10
-  10 10
-  32 0)
-
+	(is (= px (geom:x-of p)))
+	(is (= py (geom:y-of p)))
+	(is (= qx (geom:x-of q)))
+	(is (= qy (geom:y-of q)))
+	(is (= (- px qx)) (geom:x-of r))
+	(is (= (- py qy)) (geom:y-of r))))))
 
 ;;;; BOXES
 
-(deftest box.0
-    (let ((b (geom:box 1 2 3 4)))
-      (values (geom:x-of (geom:bl-corner b)) (geom:y-of (geom:bl-corner b))
-	      (geom:x-of (geom:ur-corner b)) (geom:y-of (geom:ur-corner b))))
-  1 2 3 4)
+(test box.0
+  (for-all ((blx (gen-integer)) (bly (gen-integer))
+	    (urx (gen-integer) (> urx blx)) (ury (gen-integer) (> ury bly)))
+    (let ((b (geom:box blx bly urx ury)))
+      (is (= blx (geom:x-of (geom:bl-corner b))))
+      (is (= bly (geom:y-of (geom:bl-corner b))))
+      (is (= urx (geom:x-of (geom:ur-corner b))))
+      (is (= ury (geom:y-of (geom:ur-corner b)))))))
 
-(deftest box.1
-    (let ((b (geom:box 1 2 3 4 t)))
-      (values (geom:x-of (geom:bl-corner b)) (geom:y-of (geom:bl-corner b))
-	      (geom:x-of (geom:ur-corner b)) (geom:y-of (geom:ur-corner b))))
-  1 2 4 6)
+(test box.1
+  (for-all ((blx (gen-integer)) (bly (gen-integer))
+	    (w (gen-integer)) (h (gen-integer)))
+    (let ((b (geom:box blx bly w h t)))
+      (is (= blx (geom:x-of (geom:bl-corner b))))
+      (is (= bly (geom:y-of (geom:bl-corner b))))
+      (is (= (+ blx w) (geom:x-of (geom:ur-corner b))))
+      (is (= (+ bly h) (geom:y-of (geom:ur-corner b)))))))
 
-(deftest box.2
-    (let ((b (geom:box 1 2 3 4 nil)))
-      (values (geom:x-of (geom:bl-corner b)) (geom:y-of (geom:bl-corner b))
-	      (geom:x-of (geom:ur-corner b)) (geom:y-of (geom:ur-corner b))))
-  1 2 3 4)
+(test box.2
+  (for-all ((blx (gen-integer)) (bly (gen-integer))
+	    (urx (gen-integer) (> urx blx)) (ury (gen-integer) (> ury bly)))
+    (let ((b (geom:box (geom:point blx bly) (geom:point urx ury))))
+      (is (= blx (geom:x-of (geom:bl-corner b))))
+      (is (= bly (geom:y-of (geom:bl-corner b))))
+      (is (= urx (geom:x-of (geom:ur-corner b))))
+      (is (= ury (geom:y-of (geom:ur-corner b)))))))
 
-(deftest box.3
-    (let ((b (geom:box (geom:point 1 2) (geom:point 3 4))))
-      (values (geom:x-of (geom:bl-corner b)) (geom:y-of (geom:bl-corner b))
-	      (geom:x-of (geom:ur-corner b)) (geom:y-of (geom:ur-corner b))))
-  1 2 3 4)
+(test box.3
+  (for-all ((blx (gen-integer)) (bly (gen-integer))
+	    (urx (gen-integer) (> urx blx)) (ury (gen-integer) (> ury bly)))
+    (let ((b (geom:box (geom:point urx ury) (geom:point blx bly))))
+      (is (= blx (geom:x-of (geom:bl-corner b))))
+      (is (= bly (geom:y-of (geom:bl-corner b))))
+      (is (= urx (geom:x-of (geom:ur-corner b))))
+      (is (= ury (geom:y-of (geom:ur-corner b)))))))
 
-(deftest box.4
-    (let ((b (geom:box (geom:point 3 4) (geom:point 1 2))))
-      (values (geom:x-of (geom:bl-corner b)) (geom:y-of (geom:bl-corner b))
-	      (geom:x-of (geom:ur-corner b)) (geom:y-of (geom:ur-corner b))))
-  1 2 3 4)
+(test box.4
+  (for-all ((blx (gen-integer)) (bly (gen-integer))
+	    (urx (gen-integer) (> urx blx)) (ury (gen-integer) (> ury bly)))
+    (let ((b (geom:box urx ury blx bly)))
+      (is (= blx (geom:x-of (geom:bl-corner b))))
+      (is (= bly (geom:y-of (geom:bl-corner b))))
+      (is (= urx (geom:x-of (geom:ur-corner b))))
+      (is (= ury (geom:y-of (geom:ur-corner b)))))))
 
-(deftest box.5
-    (let ((b (geom:box 3 4 1 2)))
-      (values (geom:x-of (geom:bl-corner b)) (geom:y-of (geom:bl-corner b))
-	      (geom:x-of (geom:ur-corner b)) (geom:y-of (geom:ur-corner b))))
-  1 2 3 4)
+(test box-width.0
+  (for-all ((blx (gen-integer)) (bly (gen-integer))
+	    (urx (gen-integer) (> urx blx)) (ury (gen-integer) (> ury bly)))
+    (let ((b (geom:box blx bly urx ury))
+	  (c (geom:box blx bly urx ury t)))
+      (is (= (- urx blx) (geom:box-width b)))
+      (is (= urx (geom:box-width c))))))
 
-(deftest box-width.0
-    (let ((b (geom:box 1 2 3 4))
-	  (c (geom:box 1 2 3 4 t)))
-      (values (geom:box-width b) (geom:box-width c)))
-  2 3)
-
-(deftest box-height.0
-    (let ((b (geom:box 1 2 3 4))
-	  (c (geom:box 1 2 3 4 t)))
-      (values (geom:box-height b) (geom:box-height c)))
-  2 4)
+(test box-height.0
+  (for-all ((blx (gen-integer)) (bly (gen-integer))
+	    (urx (gen-integer) (> urx blx)) (ury (gen-integer) (> ury bly)))
+    (let ((b (geom:box blx bly urx ury))
+	  (c (geom:box blx bly urx ury t)))
+      (is (= (- ury bly) (geom:box-height b)))
+      (is (= ury (geom:box-height c))))))
