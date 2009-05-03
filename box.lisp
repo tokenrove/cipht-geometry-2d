@@ -6,7 +6,8 @@ otherwise the box is specified by (X,Y) and (X2,Y2).  If RELATIVE? is
 non-NIL, X2 and Y2 are treated as width and height."
   (unless x2 (setf x2 (x-of y) y2 (y-of y) y (y-of x) x (x-of x)))
   (when relative? (incf x2 x) (incf y2 y))
-  (when (or (< x2 x) (< y2 y)) (psetf x x2 x2 x y y2 y2 y))
+  (when (< x2 x) (rotatef x x2))
+  (when (< y2 y) (rotatef y y2))
   (make-array 4 :element-type 'number :initial-contents (list x y x2 y2)))
 
 (defun displace-point (box offset)
