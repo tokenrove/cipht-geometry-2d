@@ -16,9 +16,3 @@
    (:file "box")
    ;;(:file "polygon")
    ))
-
-(defsystem geometry-2d-tests
-  :depends-on (:geometry-2d :fiveam)
-  :serial t
-  :components
-  ((:file "tests")))

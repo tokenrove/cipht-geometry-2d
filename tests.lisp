@@ -89,7 +89,7 @@
 	(is (= qx (geom:x-of r)))
 	(is (= qy (geom:y-of r)))
 	(is (eq p r))
-	(is (eq p q))))))
+	(is-false (eq p q))))))
 
 (test untranslate-point.0
   (for-all ((px (gen-integer)) (py (gen-integer))
@@ -117,7 +117,7 @@
 
 (test box.1
   (for-all ((blx (gen-integer)) (bly (gen-integer))
-	    (w (gen-integer)) (h (gen-integer)))
+	    (w (gen-integer :min 0)) (h (gen-integer :min 0)))
     (let ((b (geom:box blx bly w h t)))
       (is (= blx (geom:x-of (geom:bl-corner b))))
       (is (= bly (geom:y-of (geom:bl-corner b))))
@@ -156,13 +156,13 @@
 	    (urx (gen-integer) (> urx blx)) (ury (gen-integer) (> ury bly)))
     (let ((b (geom:box blx bly urx ury))
 	  (c (geom:box blx bly urx ury t)))
-      (is (= (- urx blx) (geom:box-width b)))
-      (is (= urx (geom:box-width c))))))
+      (is (= (abs (- urx blx)) (geom:box-width b)))
+      (is (= (abs urx) (geom:box-width c))))))
 
 (test box-height.0
   (for-all ((blx (gen-integer)) (bly (gen-integer))
 	    (urx (gen-integer) (> urx blx)) (ury (gen-integer) (> ury bly)))
     (let ((b (geom:box blx bly urx ury))
 	  (c (geom:box blx bly urx ury t)))
-      (is (= (- ury bly) (geom:box-height b)))
-      (is (= ury (geom:box-height c))))))
+      (is (= (abs (- ury bly)) (geom:box-height b)))
+      (is (= (abs ury) (geom:box-height c))))))
