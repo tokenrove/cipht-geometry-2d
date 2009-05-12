@@ -17,3 +17,6 @@
   (let ((u (/ my r)) (v (/ mx r))) (mod (atan u (if (= 0 u v) 1 v)) +2pi+)))
 (defun sum-of-squares (&rest xs) (reduce #'+ xs :key #'square))
 
+(defun in-modulo-range-p (mod left value right)
+  (or (<= left value right) (<= left (+ value mod) right)))
+
