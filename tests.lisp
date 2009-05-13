@@ -1,6 +1,7 @@
 
 (defpackage :cipht/games/geometry-2d-tests
-  (:use #:cl #:fiveam))
+  (:use #:cl #:fiveam)
+  (:export #:geometry-2d))
 
 (in-package :cipht/games/geometry-2d-tests)
 
