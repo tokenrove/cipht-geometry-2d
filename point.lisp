@@ -35,6 +35,8 @@ variant NAME*, and the copying version NAME."
 (define-symmetric-geometric-fn point<-point point (x progn 0) (y progn 0))
 (define-symmetric-geometric-fn scale-point point (x * 1) (y * 1))
 
+(defun point<-complex (c) (point (realpart c) (imagpart c)))
+
 (defmacro apply-point (point &body body)
   (let (prefix)
     (when (listp point)

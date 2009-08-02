@@ -1,4 +1,7 @@
 *.fasl
-*~
 *.pfsl
+*.fas
+*.o
+*.a
+*~
 old
