@@ -4,48 +4,26 @@
   (:use #:cl #:alexandria #:anaphora)
   (:export
    #:+2PI+
-#:APPLY-BOX-CORNERS-CCW
-#:APPLY-POINT
-#:APPLY-POINTS
-#:BL-CORNER
-#:BOX
-#:POLYGON<-BOX
-#:BOX-CONTAINS-BOX?
-#:BOX-CONTAINS-POINT?
-#:BOX-HEIGHT
-#:BOX-WIDTH
-#:BR-CORNER
-#:CENTER-BOX-ON-POINT!
-#:CLAMP-POINT
-#:COPY-BOX
-#:COPY-POINT
-#:DISPLACE-POINT
-#:HALF
-#:ILERP
-#:IN-MODULO-RANGE-P
-#:MOUSE-ARC
-#:POINT
-#:POINT<-POINT!
-#:POINT<-COMPLEX
-#:SCALE-BOX
-#:SCALE-BOX-BY-POINT
-#:SCALE-POINT
-#:SCALE-POINT!
-#:SCALE-POINT*
-#:SINKF
-#:SUM-OF-SQUARES
-#:TRANSLATE-BOX
-#:TRANSLATE-BOX-TO
-#:TRANSLATE-BOX-TO!
-#:TRANSLATE-POINT
-#:TRANSLATE-POINT!
-#:TRANSLATE-POINT*
-#:UL-CORNER
-#:UNTRANSLATE-BOX
-#:UNTRANSLATE-POINT
-#:UNTRANSLATE-POINT!
-#:UNTRANSLATE-POINT*
-#:UR-CORNER
-#:X-OF
-#:Y-OF
+   #:point
+   #:x-of
+   #:y-of
+   #:copy-point
+   #:on-point
+   #:point+
+   #:box
+   #:bl-corner
+   #:ur-corner
+   #:br-corner
+   #:ul-corner
+   #:box-width
+   #:box-height
+   ;; math
+   #:sink
+   #:sinkf
+   #:ilerp
+   #:mouse-arc
+   #:half
+   #:square
+   #:in-modulo-range-p
+   #:sum-of-squares
    ))

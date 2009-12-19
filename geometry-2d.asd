@@ -1,8 +1,5 @@
 ;; -*- Lisp -*-
 
-(defpackage #:geometry-2d-system (:use #:cl #:asdf))
-(in-package #:geometry-2d-system)
-
 (defsystem geometry-2d
   :depends-on (:anaphora :alexandria)
   :serial t

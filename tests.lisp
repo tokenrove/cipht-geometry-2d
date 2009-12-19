@@ -44,8 +44,8 @@
   (signals type-error (geom:point nil 0)))
 
 (test translate-point.0
-  (for-all ((px (gen-integer)) (py (gen-integer))
-	    (qx (gen-integer)) (qy (gen-integer)))
+  (for-all ((px (gen-float)) (py (gen-float))
+	    (qx (gen-float)) (qy (gen-float)))
     (let ((p (geom:point px py))
 	  (q (geom:point qx qy)))
       (let ((r (geom:translate-point p q)))
@@ -57,8 +57,8 @@
 	(is (= (+ py qy)) (geom:y-of r))))))
 
 (test translate-point!.0
-  (for-all ((px (gen-integer)) (py (gen-integer))
-	    (qx (gen-integer)) (qy (gen-integer)))
+  (for-all ((px (gen-float)) (py (gen-float))
+	    (qx (gen-float)) (qy (gen-float)))
     (let ((p (geom:point px py))
 	  (q (geom:point qx qy)))
       (let ((r (geom:translate-point! p q)))
@@ -69,8 +69,8 @@
 	(is (eq p r))))))
 
 (test translate-point*.0
-  (for-all ((px (gen-integer)) (py (gen-integer))
-	    (qx (gen-integer)) (qy (gen-integer)))
+  (for-all ((px (gen-float)) (py (gen-float))
+	    (qx (gen-float)) (qy (gen-float)))
     (let ((p (geom:point px py)))
       (let ((r (geom:translate-point* p :x qx :y qy)))
 	(is (= (+ px qx)) (geom:x-of r))
@@ -78,8 +78,8 @@
 	(is (eq p r))))))
 
 (test point<-point.0
-  (for-all ((px (gen-integer)) (py (gen-integer))
-	    (qx (gen-integer)) (qy (gen-integer)))
+  (for-all ((px (gen-float)) (py (gen-float))
+	    (qx (gen-float)) (qy (gen-float)))
     (let ((p (geom:point px py))
 	  (q (geom:point qx qy)))
       (let ((r (geom:point<-point! p q)))
@@ -93,8 +93,8 @@
 	(is-false (eq p q))))))
 
 (test untranslate-point.0
-  (for-all ((px (gen-integer)) (py (gen-integer))
-	    (qx (gen-integer)) (qy (gen-integer)))
+  (for-all ((px (gen-float)) (py (gen-float))
+	    (qx (gen-float)) (qy (gen-float)))
     (let ((p (geom:point px py))
 	  (q (geom:point qx qy)))
       (let ((r (geom:untranslate-point p q)))
@@ -108,8 +108,8 @@
 ;;;; BOXES
 
 (test box.0
-  (for-all ((blx (gen-integer)) (bly (gen-integer))
-	    (urx (gen-integer) (> urx blx)) (ury (gen-integer) (> ury bly)))
+  (for-all ((blx (gen-float)) (bly (gen-float))
+	    (urx (gen-float) (> urx blx)) (ury (gen-float) (> ury bly)))
     (let ((b (geom:box blx bly urx ury)))
       (is (= blx (geom:x-of (geom:bl-corner b))))
       (is (= bly (geom:y-of (geom:bl-corner b))))
@@ -117,8 +117,8 @@
       (is (= ury (geom:y-of (geom:ur-corner b)))))))
 
 (test box.1
-  (for-all ((blx (gen-integer)) (bly (gen-integer))
-	    (w (gen-integer :min 0)) (h (gen-integer :min 0)))
+  (for-all ((blx (gen-float)) (bly (gen-float))
+	    (w (gen-float :min 0)) (h (gen-float :min 0)))
     (let ((b (geom:box blx bly w h t)))
       (is (= blx (geom:x-of (geom:bl-corner b))))
       (is (= bly (geom:y-of (geom:bl-corner b))))
@@ -126,8 +126,8 @@
       (is (= (+ bly h) (geom:y-of (geom:ur-corner b)))))))
 
 (test box.2
-  (for-all ((blx (gen-integer)) (bly (gen-integer))
-	    (urx (gen-integer) (> urx blx)) (ury (gen-integer) (> ury bly)))
+  (for-all ((blx (gen-float)) (bly (gen-float))
+	    (urx (gen-float) (> urx blx)) (ury (gen-float) (> ury bly)))
     (let ((b (geom:box (geom:point blx bly) (geom:point urx ury))))
       (is (= blx (geom:x-of (geom:bl-corner b))))
       (is (= bly (geom:y-of (geom:bl-corner b))))
@@ -135,8 +135,8 @@
       (is (= ury (geom:y-of (geom:ur-corner b)))))))
 
 (test box.3
-  (for-all ((blx (gen-integer)) (bly (gen-integer))
-	    (urx (gen-integer) (> urx blx)) (ury (gen-integer) (> ury bly)))
+  (for-all ((blx (gen-float)) (bly (gen-float))
+	    (urx (gen-float) (> urx blx)) (ury (gen-float) (> ury bly)))
     (let ((b (geom:box (geom:point urx ury) (geom:point blx bly))))
       (is (= blx (geom:x-of (geom:bl-corner b))))
       (is (= bly (geom:y-of (geom:bl-corner b))))
@@ -144,8 +144,8 @@
       (is (= ury (geom:y-of (geom:ur-corner b)))))))
 
 (test box.4
-  (for-all ((blx (gen-integer)) (bly (gen-integer))
-	    (urx (gen-integer) (> urx blx)) (ury (gen-integer) (> ury bly)))
+  (for-all ((blx (gen-float)) (bly (gen-float))
+	    (urx (gen-float) (> urx blx)) (ury (gen-float) (> ury bly)))
     (let ((b (geom:box urx ury blx bly)))
       (is (= blx (geom:x-of (geom:bl-corner b))))
       (is (= bly (geom:y-of (geom:bl-corner b))))
@@ -153,16 +153,16 @@
       (is (= ury (geom:y-of (geom:ur-corner b)))))))
 
 (test box-width.0
-  (for-all ((blx (gen-integer)) (bly (gen-integer))
-	    (urx (gen-integer) (> urx blx)) (ury (gen-integer) (> ury bly)))
+  (for-all ((blx (gen-float)) (bly (gen-float))
+	    (urx (gen-float) (> urx blx)) (ury (gen-float) (> ury bly)))
     (let ((b (geom:box blx bly urx ury))
 	  (c (geom:box blx bly urx ury t)))
       (is (= (abs (- urx blx)) (geom:box-width b)))
       (is (= (abs urx) (geom:box-width c))))))
 
 (test box-height.0
-  (for-all ((blx (gen-integer)) (bly (gen-integer))
-	    (urx (gen-integer) (> urx blx)) (ury (gen-integer) (> ury bly)))
+  (for-all ((blx (gen-float)) (bly (gen-float))
+	    (urx (gen-float) (> urx blx)) (ury (gen-float) (> ury bly)))
     (let ((b (geom:box blx bly urx ury))
 	  (c (geom:box blx bly urx ury t)))
       (is (= (abs (- ury bly)) (geom:box-height b)))
