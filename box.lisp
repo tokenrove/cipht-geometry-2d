@@ -1,4 +1,4 @@
-(in-package :cipht/games/geometry-2d)
+(in-package :net.cipht/games/geometry-2d)
 
 (deftype box () '(simple-array point (2)))
 

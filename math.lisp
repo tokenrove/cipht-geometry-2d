@@ -1,5 +1,5 @@
 
-(in-package :cipht/games/geometry-2d)
+(in-package :net.cipht/games/geometry-2d)
 
 (declaim (inline half square ilerp sink in-modulo-range-p))
 (defun half (x) (/ x 2.0))

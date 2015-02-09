@@ -1,4 +1,4 @@
-(in-package :cipht/games/geometry-2d)
+(in-package :net.cipht/games/geometry-2d)
 
 (deftype point () '(complex single-float))
 (declaim (inline point copy-point x-of y-of))

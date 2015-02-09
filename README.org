@@ -1,0 +1,10 @@
+
+* Warning!
+
+You probably don't want to use this.
+
+This is a Common Lisp library for simple 2D geometry operations I used
+in a number of unreleased CL projects.  I am opening it up to use it
+as a support library for [[http://github.com/tokenrove/demon-of-the-fall][Demon of the Fall]], but that is not an
+endorsement of quality, and I do not expect to maintain this code
+beyond its use there.

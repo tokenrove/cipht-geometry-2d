@@ -1,5 +1,5 @@
 
-(defpackage #:cipht/games/geometry-2d
+(defpackage #:net.cipht/games/geometry-2d
   (:nicknames #:geom-2d #:geom)
   (:use #:cl #:alexandria #:anaphora)
   (:export
@@ -25,5 +25,9 @@
    #:half
    #:square
    #:in-modulo-range-p
-   #:sum-of-squares
-   ))
+   #:sum-of-squares)
+  ;; Test suites
+  (:export #:unit #:acceptance))
+
+(in-package :net.cipht/games/geometry-2d)
+(5am:def-suite unit)

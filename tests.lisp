@@ -1,12 +1,9 @@
 
-(defpackage :cipht/games/geometry-2d-tests
-  (:use #:cl #:fiveam)
-  (:export #:geometry-2d))
+(defpackage :net.cipht/games/geometry-2d/external-tests
+  (:use #:cl #:fiveam))
+(in-package :net.cipht/games/geometry-2d/external-tests)
 
-(in-package :cipht/games/geometry-2d-tests)
-
-(def-suite geometry-2d)
-(in-suite geometry-2d)
+(in-suite geom:unit)
 
 ;;;; CONSTANTS
 
@@ -48,62 +45,13 @@
 	    (qx (gen-float)) (qy (gen-float)))
     (let ((p (geom:point px py))
 	  (q (geom:point qx qy)))
-      (let ((r (geom:translate-point p q)))
+      (let ((r (geom:point+ p q)))
 	(is (= px (geom:x-of p)))
 	(is (= py (geom:y-of p)))
 	(is (= qx (geom:x-of q)))
 	(is (= qy (geom:y-of q)))
 	(is (= (+ px qx)) (geom:x-of r))
 	(is (= (+ py qy)) (geom:y-of r))))))
-
-(test translate-point!.0
-  (for-all ((px (gen-float)) (py (gen-float))
-	    (qx (gen-float)) (qy (gen-float)))
-    (let ((p (geom:point px py))
-	  (q (geom:point qx qy)))
-      (let ((r (geom:translate-point! p q)))
-	(is (= qx (geom:x-of q)))
-	(is (= qy (geom:y-of q)))
-	(is (= (+ px qx)) (geom:x-of r))
-	(is (= (+ py qy)) (geom:y-of r))
-	(is (eq p r))))))
-
-(test translate-point*.0
-  (for-all ((px (gen-float)) (py (gen-float))
-	    (qx (gen-float)) (qy (gen-float)))
-    (let ((p (geom:point px py)))
-      (let ((r (geom:translate-point* p :x qx :y qy)))
-	(is (= (+ px qx)) (geom:x-of r))
-	(is (= (+ py qy)) (geom:y-of r))
-	(is (eq p r))))))
-
-(test point<-point.0
-  (for-all ((px (gen-float)) (py (gen-float))
-	    (qx (gen-float)) (qy (gen-float)))
-    (let ((p (geom:point px py))
-	  (q (geom:point qx qy)))
-      (let ((r (geom:point<-point! p q)))
-	(is (= qx (geom:x-of p)))
-	(is (= qy (geom:y-of p)))
-	(is (= qx (geom:x-of q)))
-	(is (= qy (geom:y-of q)))
-	(is (= qx (geom:x-of r)))
-	(is (= qy (geom:y-of r)))
-	(is (eq p r))
-	(is-false (eq p q))))))
-
-(test untranslate-point.0
-  (for-all ((px (gen-float)) (py (gen-float))
-	    (qx (gen-float)) (qy (gen-float)))
-    (let ((p (geom:point px py))
-	  (q (geom:point qx qy)))
-      (let ((r (geom:untranslate-point p q)))
-	(is (= px (geom:x-of p)))
-	(is (= py (geom:y-of p)))
-	(is (= qx (geom:x-of q)))
-	(is (= qy (geom:y-of q)))
-	(is (= (- px qx)) (geom:x-of r))
-	(is (= (- py qy)) (geom:y-of r))))))
 
 ;;;; BOXES
 
@@ -118,12 +66,12 @@
 
 (test box.1
   (for-all ((blx (gen-float)) (bly (gen-float))
-	    (w (gen-float :min 0)) (h (gen-float :min 0)))
-    (let ((b (geom:box blx bly w h t)))
+            (w (gen-float)) (h (gen-float)))
+    (let ((b (geom:box blx bly (abs w) (abs h) t)))
       (is (= blx (geom:x-of (geom:bl-corner b))))
       (is (= bly (geom:y-of (geom:bl-corner b))))
-      (is (= (+ blx w) (geom:x-of (geom:ur-corner b))))
-      (is (= (+ bly h) (geom:y-of (geom:ur-corner b)))))))
+      (is (= (+ blx (abs w)) (geom:x-of (geom:ur-corner b))))
+      (is (= (+ bly (abs h)) (geom:y-of (geom:ur-corner b)))))))
 
 (test box.2
   (for-all ((blx (gen-float)) (bly (gen-float))
